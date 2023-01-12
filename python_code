@@ -1,0 +1,21 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+from bs4 import BeautifulSoup
+import base64
+
+browser = webdriver.Firefox()
+browser.get("http://hackyou-captcha.ctf.su/")
+
+html = browser.page_source
+soup = BeautifulSoup(html)
+
+for tag in soup.find_all('code'): # поиск строчки где code
+    print(tag.text)
+
+code = browser.find_element_by_name("answer") #поиск строки ввода
+code.send_keys(base64.b64decode(tag.text).decode('utf-8')) #перекодирование в вставление
+button = browser.find_element_by_xpath("//input[@type='submit' and @value='Answer »']") #поиск кнопки
+button.click() #нажатие на кнопку
