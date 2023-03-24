@@ -1,0 +1,21 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+from bs4 import BeautifulSoup
+import base64
+
+browser = webdriver.Firefox()
+browser.get("http://62.173.140.174:16011/")
+
+html = browser.page_source
+soup = BeautifulSoup(html)
+
+for tag in soup.find_all('Solve: '): # поиск строчки где code
+    print(tag.text)
+
+code = browser.find_element_by_name("answer") #поиск строки ввода
+code.send_keys(tag.text) #перекодирование в вставление
+button = browser.find_element_by_xpath("//input[@type='value' and @value='Reload page']") #поиск кнопки
+button.click() #нажатие на кнопку
